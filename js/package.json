@@ -1,0 +1,50 @@
+{
+  "name": "jsonsubschema",
+  "version": "0.1.0",
+  "description": "Check if one JSON Schema is a subschema of another - JavaScript/TypeScript implementation",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src test --ext .ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "json-schema",
+    "subschema",
+    "subtype",
+    "schema",
+    "validation",
+    "type-checking"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vitest/coverage-v8": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "eslint": "^8.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

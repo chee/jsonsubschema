@@ -1,0 +1,253 @@
+{
+  "description": "Number type subschema tests",
+  "tests": [
+    {
+      "name": "identity",
+      "description": "A schema should be a subschema of itself",
+      "schema1": {"type": "number"},
+      "schema2": {"type": "number"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "min_min",
+      "description": "More restrictive minimum is a subtype",
+      "schema1": {"type": "number", "minimum": 5},
+      "schema2": {"type": "number", "minimum": 1},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "max_max",
+      "description": "More restrictive maximum is a subtype",
+      "schema1": {"type": "number", "maximum": 10},
+      "schema2": {"type": "number", "maximum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "max_min",
+      "description": "Maximum and minimum don't overlap",
+      "schema1": {"type": "number", "maximum": 10},
+      "schema2": {"type": "number", "minimum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max",
+      "description": "Minimum and maximum don't overlap",
+      "schema1": {"type": "number", "minimum": 10},
+      "schema2": {"type": "number", "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max_min_max1",
+      "description": "Narrower range is a subtype",
+      "schema1": {"type": "number", "minimum": 5, "maximum": 10},
+      "schema2": {"type": "number", "minimum": 1, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max_min_max2",
+      "description": "Tighter minimum makes a subtype",
+      "schema1": {"type": "number", "minimum": 5, "maximum": 20},
+      "schema2": {"type": "number", "minimum": 10, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "min_max_min_max3",
+      "description": "Non-overlapping ranges",
+      "schema1": {"type": "number", "minimum": 5, "maximum": 20},
+      "schema2": {"type": "number", "minimum": 40, "maximum": 100},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "xmin_max_min_max",
+      "description": "Exclusive minimum is more restrictive",
+      "schema1": {"type": "number", "minimum": 5, "exclusiveMinimum": true, "maximum": 20},
+      "schema2": {"type": "number", "minimum": 5, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "xmin_max_min_xmax",
+      "description": "Exclusive minimum vs exclusive maximum",
+      "schema1": {"type": "number", "minimum": 5, "exclusiveMinimum": true, "maximum": 20},
+      "schema2": {"type": "number", "minimum": 5, "maximum": 20, "exclusiveMaximum": true},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "xmin_xmax_min_max",
+      "description": "Both exclusive bounds are more restrictive",
+      "schema1": {"type": "number", "minimum": 5, "exclusiveMinimum": true, "maximum": 20, "exclusiveMaximum": true},
+      "schema2": {"type": "number", "minimum": 5, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max_xmin_xmax1",
+      "description": "For numbers (not integers), exclusive bounds are different",
+      "schema1": {"type": "number", "minimum": 5, "exclusiveMinimum": true, "maximum": 20, "exclusiveMaximum": true},
+      "schema2": {"type": "number", "minimum": 6, "maximum": 19},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "min_max_xmin_xmax2",
+      "description": "Exclusive max different from inclusive for numbers",
+      "schema1": {"type": "number", "minimum": 5, "exclusiveMinimum": true, "maximum": 20, "exclusiveMaximum": true},
+      "schema2": {"type": "number", "minimum": 6, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "xmin_xmax_xmin_xmax",
+      "description": "Exclusive flags comparison",
+      "schema1": {"type": "number", "minimum": 5, "exclusiveMinimum": false, "maximum": 20, "exclusiveMaximum": true},
+      "schema2": {"type": "number", "minimum": 5, "exclusiveMinimum": true, "maximum": 20, "exclusiveMaximum": true},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "mulOf1",
+      "description": "MultipleOf with decimal is more restrictive",
+      "schema1": {"type": "number", "multipleOf": 10.5},
+      "schema2": {"type": "number"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf2",
+      "description": "MultipleOf 6 is subset of 1.5",
+      "schema1": {"type": "number", "multipleOf": 1.5},
+      "schema2": {"type": "number", "multipleOf": 6},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "mulOf3",
+      "description": "Negative multipleOf should raise error",
+      "schema1": {"type": "number", "multipleOf": 0.5},
+      "schema2": {"type": "number", "multipleOf": -0.5},
+      "shouldError": true,
+      "errorType": "SchemaError"
+    },
+    {
+      "name": "mulOf4",
+      "description": "MultipleOf 1 for numbers",
+      "schema1": {"type": "number", "multipleOf": 1},
+      "schema2": {"type": "number"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_min",
+      "description": "MultipleOf with minimum - neither is subtype",
+      "schema1": {"type": "number", "multipleOf": 10},
+      "schema2": {"type": "number", "minimum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_min_min",
+      "description": "MultipleOf with matching minimum",
+      "schema1": {"type": "number", "multipleOf": 10, "minimum": 10},
+      "schema2": {"type": "number", "minimum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_min_min_max",
+      "description": "MultipleOf with minimum vs range",
+      "schema1": {"type": "number", "multipleOf": 10, "minimum": 10},
+      "schema2": {"type": "number", "minimum": 5, "maximum": 500},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    }
+  ]
+}

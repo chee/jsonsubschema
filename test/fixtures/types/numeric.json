@@ -1,0 +1,217 @@
+{
+  "description": "Integer/Number interplay and composite numeric tests",
+  "tests": [
+    {
+      "name": "int_num",
+      "description": "Integer is a subtype of number",
+      "schema1": {"type": "integer"},
+      "schema2": {"type": "number"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_num_int",
+      "description": "Number with decimal minimum vs integer",
+      "schema1": {"type": "number", "minimum": 1.5},
+      "schema2": {"type": "integer", "minimum": 1},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_num_min_int",
+      "description": "Number multipleOf vs integer minimum",
+      "schema1": {"type": "number", "multipleOf": 10},
+      "schema2": {"type": "integer", "minimum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_num_int",
+      "description": "Number multipleOf 10 is subtype of integer",
+      "schema1": {"type": "number", "multipleOf": 10},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_num_int2",
+      "description": "Number multipleOf 1 equals integer",
+      "schema1": {"type": "number", "multipleOf": 1},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "decimal1",
+      "description": "Decimal vs integer maximum equivalence",
+      "schema1": {"maximum": 10.0},
+      "schema2": {"maximum": 10},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "invalid_schema",
+      "description": "Invalid schema with empty string in allOf",
+      "schema1": {"type": "integer"},
+      "schema2": {"type": "number", "allOf": [""]},
+      "shouldError": true,
+      "errorType": "SchemaError"
+    },
+    {
+      "name": "int_int_num1",
+      "description": "Integer vs allOf with integer and constrained number",
+      "schema1": {"type": "integer"},
+      "schema2": {"type": "number", "allOf": [{"type": "integer"}, {"type": "number", "minimum": 10}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "int_int_num2",
+      "description": "Integer multipleOf vs allOf integer with minimum",
+      "schema1": {"type": "integer", "multipleOf": 5},
+      "schema2": {"type": "number", "allOf": [{"type": "integer"}, {"type": "number", "minimum": 10}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "int_mul_mul1",
+      "description": "Integer multipleOf 5 vs allOf with multipleOf 3",
+      "schema1": {"type": "integer", "multipleOf": 5},
+      "schema2": {"type": "number", "multipleOF": 3, "allOf": [{"type": "integer"}, {"type": "number", "multipleOf": 3}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "int_mul_mul2",
+      "description": "Integer multipleOf 15 equals intersection of 3 and 5",
+      "schema1": {"type": "integer", "multipleOf": 15},
+      "schema2": {"type": "number", "multipleOf": 3, "allOf": [{"type": "integer"}, {"type": "number", "multipleOf": 5}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "all_all_1",
+      "description": "allOf with multipleOf and minimum vs allOf with multiple multipleOf",
+      "schema1": {"type": "integer", "allOf": [{"multipleOf": 3}, {"minimum": 5}]},
+      "schema2": {"type": "number", "multipleOf": 3, "allOf": [{"type": "integer"}, {"type": "number", "multipleOf": 5}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "all_all_2",
+      "description": "Integer multipleOf 3 equals complex allOf",
+      "schema1": {"type": "integer", "allOf": [{"multipleOf": 3}]},
+      "schema2": {"type": "number", "multipleOf": 3, "allOf": [{"type": "integer"}, {"type": "number", "multipleOf": 3}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "all_all_3",
+      "description": "Number multipleOf 0.3 vs integer multipleOf",
+      "schema1": {"type": "number", "allOf": [{"multipleOf": 0.3}]},
+      "schema2": {"type": "number", "multipleOf": 3, "allOf": [{"type": "integer"}, {"type": "number", "multipleOf": 3}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "enum1",
+      "description": "Enum of numbers is subtype of number",
+      "schema1": {"enum": [1, 2, 3]},
+      "schema2": {"type": "number"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "enum2",
+      "description": "Enum subset comparison with decimal equivalence",
+      "schema1": {"enum": [1.0, 2, 3]},
+      "schema2": {"enum": [1, 2.0]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "enum3",
+      "description": "Enum of integers is subtype of integer",
+      "schema1": {"enum": [1, 2, 3]},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "enum4",
+      "description": "Enum with decimal-integer equivalence",
+      "schema1": {"enum": [1, 2.0, 3]},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    }
+  ]
+}

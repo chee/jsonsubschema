@@ -1,0 +1,449 @@
+{
+  "description": "Integer type subschema tests",
+  "tests": [
+    {
+      "name": "identity",
+      "description": "A schema should be a subschema of itself",
+      "schema1": {"type": "integer"},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "min_min",
+      "description": "More restrictive minimum is a subtype",
+      "schema1": {"type": "integer", "minimum": 5},
+      "schema2": {"type": "integer", "minimum": 1},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "max_max",
+      "description": "More restrictive maximum is a subtype",
+      "schema1": {"type": "integer", "maximum": 10},
+      "schema2": {"type": "integer", "maximum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "max_min",
+      "description": "Maximum and minimum don't overlap",
+      "schema1": {"type": "integer", "maximum": 10},
+      "schema2": {"type": "integer", "minimum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max",
+      "description": "Minimum and maximum don't overlap",
+      "schema1": {"type": "integer", "minimum": 10},
+      "schema2": {"type": "integer", "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max_min_max1",
+      "description": "Narrower range is a subtype",
+      "schema1": {"type": "integer", "minimum": 5, "maximum": 10},
+      "schema2": {"type": "integer", "minimum": 1, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max_min_max2",
+      "description": "Tighter minimum makes a subtype",
+      "schema1": {"type": "integer", "minimum": 5, "maximum": 20},
+      "schema2": {"type": "integer", "minimum": 10, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "min_max_min_max3",
+      "description": "Non-overlapping ranges",
+      "schema1": {"type": "integer", "minimum": 5, "maximum": 20},
+      "schema2": {"type": "integer", "minimum": 40, "maximum": 100},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "xmin_max_min_max",
+      "description": "Exclusive minimum is more restrictive",
+      "schema1": {"type": "integer", "minimum": 5, "exclusiveMinimum": true, "maximum": 20},
+      "schema2": {"type": "integer", "minimum": 5, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "xmin_max_min_xmax",
+      "description": "Exclusive minimum vs exclusive maximum",
+      "schema1": {"type": "integer", "minimum": 5, "exclusiveMinimum": true, "maximum": 20},
+      "schema2": {"type": "integer", "minimum": 5, "maximum": 20, "exclusiveMaximum": true},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "xmin_xmax_min_max",
+      "description": "Both exclusive bounds are more restrictive",
+      "schema1": {"type": "integer", "minimum": 5, "exclusiveMinimum": true, "maximum": 20, "exclusiveMaximum": true},
+      "schema2": {"type": "integer", "minimum": 5, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max_xmin_xmax1",
+      "description": "Integer ranges with exclusive bounds equivalent",
+      "schema1": {"type": "integer", "minimum": 5, "exclusiveMinimum": true, "maximum": 20, "exclusiveMaximum": true},
+      "schema2": {"type": "integer", "minimum": 6, "maximum": 19},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "min_max_xmin_xmax2",
+      "description": "Exclusive max vs inclusive max for integers",
+      "schema1": {"type": "integer", "minimum": 5, "exclusiveMinimum": true, "maximum": 20, "exclusiveMaximum": true},
+      "schema2": {"type": "integer", "minimum": 6, "maximum": 20},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "xmin_xmax_xmin_xmax",
+      "description": "Exclusive flags comparison",
+      "schema1": {"type": "integer", "minimum": 5, "exclusiveMinimum": false, "maximum": 20, "exclusiveMaximum": true},
+      "schema2": {"type": "integer", "minimum": 5, "exclusiveMinimum": true, "maximum": 20, "exclusiveMaximum": true},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "mulOf1",
+      "description": "MultipleOf is more restrictive",
+      "schema1": {"type": "integer", "multipleOf": 10},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf2",
+      "description": "MultipleOf 10 is subset of multipleOf 5",
+      "schema1": {"type": "integer", "multipleOf": 10},
+      "schema2": {"type": "integer", "multipleOf": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf3",
+      "description": "Non-divisible multipleOf values",
+      "schema1": {"type": "integer", "multipleOf": 10},
+      "schema2": {"type": "integer", "multipleOf": 98},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_min",
+      "description": "MultipleOf with minimum - neither is subtype",
+      "schema1": {"type": "integer", "multipleOf": 10},
+      "schema2": {"type": "integer", "minimum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_min_min",
+      "description": "MultipleOf with matching minimum",
+      "schema1": {"type": "integer", "multipleOf": 10, "minimum": 10},
+      "schema2": {"type": "integer", "minimum": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "mulOf_min_min_max",
+      "description": "MultipleOf with minimum vs range",
+      "schema1": {"type": "integer", "multipleOf": 10, "minimum": 10},
+      "schema2": {"type": "integer", "minimum": 5, "maximum": 500},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "min_max_mul",
+      "description": "Empty set from impossible constraints",
+      "schema1": {"type": "integer", "minimum": 5, "maximum": 10, "multipleOf": 15},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join1",
+      "description": "Union that covers all integers",
+      "schema1": {"anyOf": [{"type": "integer", "minimum": 5, "maximum": 10}, {"type": "integer"}]},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "join2",
+      "description": "Union with minimum 0 doesn't cover all integers",
+      "schema1": {"anyOf": [{"type": "integer", "minimum": 5, "maximum": 10}, {"type": "integer", "minimum": 0}]},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join3",
+      "description": "Union of two ranges vs range with minimum",
+      "schema1": {"anyOf": [{"type": "integer", "minimum": 5, "maximum": 10}, {"type": "integer", "minimum": 0, "maximum": 3}]},
+      "schema2": {"type": "integer", "minimum": -1},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join4",
+      "description": "Continuous range vs union of ranges",
+      "schema1": {"anyOf": [{"type": "integer", "minimum": 5, "maximum": 10}, {"type": "integer", "minimum": 0, "maximum": 4}]},
+      "schema2": {"type": "integer", "minimum": 1, "maximum": 8},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "join5",
+      "description": "Gap in union due to exclusive minimum",
+      "schema1": {"anyOf": [{"type": "integer", "minimum": 5, "exclusiveMinimum": true, "maximum": 10}, {"type": "integer", "minimum": 0, "maximum": 4}]},
+      "schema2": {"type": "integer", "minimum": 1, "maximum": 8},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join6",
+      "description": "Adjacent ranges form continuous range",
+      "schema1": {"anyOf": [{"type": "integer", "minimum": 0, "maximum": 10}, {"type": "integer", "minimum": 11}]},
+      "schema2": {"type": "integer", "minimum": 0},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "join_mulof1",
+      "description": "Union with unconstrained integers",
+      "schema1": {"anyOf": [{"type": "integer", "multipleOf": 5}, {"type": "integer"}]},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "join_mulof2",
+      "description": "Union of two coprime multiples",
+      "schema1": {"anyOf": [{"type": "integer", "multipleOf": 5}, {"type": "integer", "multipleOf": 7}]},
+      "schema2": {"type": "integer"},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join_mulof3",
+      "description": "MultipleOf 35 is subset of union of 5 and 7",
+      "schema1": {"anyOf": [{"type": "integer", "multipleOf": 5}, {"type": "integer", "multipleOf": 7}]},
+      "schema2": {"type": "integer", "multipleOf": 35},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "join_mulof4",
+      "description": "MultipleOf 5 is subset of union",
+      "schema1": {"anyOf": [{"type": "integer", "multipleOf": 5}, {"type": "integer", "multipleOf": 7}]},
+      "schema2": {"type": "integer", "multipleOf": 5},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "join_mulof5",
+      "description": "Union of 3 and 6 equals 3 (6 is subset of 3)",
+      "schema1": {"anyOf": [{"type": "integer", "multipleOf": 3}, {"type": "integer", "multipleOf": 6}]},
+      "schema2": {"type": "integer", "multipleOf": 3},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": true
+        }
+      }
+    },
+    {
+      "name": "join_mulof6",
+      "description": "Union of 12 and 9 is subset of 3",
+      "schema1": {"anyOf": [{"type": "integer", "multipleOf": 12}, {"type": "integer", "multipleOf": 9}]},
+      "schema2": {"type": "integer", "multipleOf": 3},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join_mulof7",
+      "description": "Union with range constraints",
+      "schema1": {"anyOf": [{"type": "integer", "multipleOf": 3, "maximum": 10}, {"type": "integer", "multipleOf": 5}]},
+      "schema2": {"type": "integer", "multipleOf": 3},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": false,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join_mulof8",
+      "description": "Complex union comparison",
+      "schema1": {"anyOf": [{"type": "integer", "minimum": 5, "maximum": 15, "multipleOf": 5}, {"type": "integer", "minimum": 5, "maximum": 15, "multipleOf": 3}]},
+      "schema2": {"anyOf": [{"type": "integer", "minimum": 0, "maximum": 12, "multipleOf": 3}, {"type": "integer", "minimum": 1, "maximum": 20, "multipleOf": 5}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join_mulof9",
+      "description": "Single schema vs union of overlapping ranges",
+      "schema1": {"type": "integer", "minimum": -4, "maximum": 10, "multipleOf": 5},
+      "schema2": {"anyOf": [{"type": "integer", "minimum": 0, "maximum": 20, "multipleOf": 10}, {"type": "integer", "minimum": 1, "maximum": 10, "multipleOf": 5}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    },
+    {
+      "name": "join_mulof10",
+      "description": "Enum vs complex union with multipleOf",
+      "schema1": {"enum": [1, 3, 5, 7, 9, 10]},
+      "schema2": {"anyOf": [{"type": "integer", "minimum": 0, "maximum": 20, "multipleOf": 10}, {"type": "integer", "minimum": 1, "maximum": 10, "multipleOf": 5}, {"enum": [1, 3, 7, 9]}]},
+      "operations": {
+        "isSubschema": {
+          "s1_sub_s2": true,
+          "s2_sub_s1": false
+        }
+      }
+    }
+  ]
+}
