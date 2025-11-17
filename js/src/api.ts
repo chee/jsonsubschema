@@ -3,6 +3,25 @@
  */
 
 import { JSONSchema } from './types'
+import { createChecker } from './checkers'
+import { cloneSchema } from './utils'
+
+/**
+ * Prepare schemas for operations (normalize and create checkers)
+ */
+function prepareOperands(s1: JSONSchema, s2: JSONSchema) {
+  // Clone schemas to avoid mutation
+  const schema1 = cloneSchema(s1)
+  const schema2 = cloneSchema(s2)
+
+  // TODO: Add canonicalization here
+
+  // Create checkers
+  const checker1 = createChecker(schema1)
+  const checker2 = createChecker(schema2)
+
+  return { checker1, checker2 }
+}
 
 /**
  * Check if schema s1 is a subschema of schema s2
@@ -15,8 +34,14 @@ import { JSONSchema } from './types'
  * @returns true if s1 is a subschema of s2, false or null otherwise
  */
 export function isSubschema(s1: JSONSchema, s2: JSONSchema): boolean | null {
-  // TODO: Implement
-  throw new Error('Not yet implemented')
+  try {
+    const { checker1, checker2 } = prepareOperands(s1, s2)
+    return checker1.isSubtype(checker2)
+  } catch (error) {
+    // If we can't create checkers or compare, return null
+    console.error('Error in isSubschema:', error)
+    return null
+  }
 }
 
 /**
@@ -30,8 +55,9 @@ export function isSubschema(s1: JSONSchema, s2: JSONSchema): boolean | null {
  * @returns The meet schema
  */
 export function meetSchemas(s1: JSONSchema, s2: JSONSchema): JSONSchema {
-  // TODO: Implement
-  throw new Error('Not yet implemented')
+  const { checker1, checker2 } = prepareOperands(s1, s2)
+  const meetChecker = checker1.meet(checker2)
+  return meetChecker.toSchema()
 }
 
 /**
@@ -45,8 +71,9 @@ export function meetSchemas(s1: JSONSchema, s2: JSONSchema): JSONSchema {
  * @returns The join schema
  */
 export function joinSchemas(s1: JSONSchema, s2: JSONSchema): JSONSchema {
-  // TODO: Implement
-  throw new Error('Not yet implemented')
+  const { checker1, checker2 } = prepareOperands(s1, s2)
+  const joinChecker = checker1.join(checker2)
+  return joinChecker.toSchema()
 }
 
 /**
